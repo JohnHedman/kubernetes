@@ -1,0 +1,33 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: jhedman-config-eksctl
+  region: us-west-2
+
+vpc:
+  subnets:
+    private:
+      us-west-2a: { id: subnet-028494fe57ede80d3 }
+      us-west-2b: { id: subnet-0276f0ec725968655 }
+      us-west-2c: { id: subnet-0f49a26c0b3354f7b }
+  securityGroup: "sg-0c03411158eb72748"
+  sharedNodeSecurityGroup: "sg-0c03411158eb72748"
+
+iam:
+  serviceRoleARN: "arn:aws:iam::707566951618:role/jhedman-eks-cluster-role"
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t2.micro
+    desiredCapacity: 3
+    privateNetworking: true
+    securityGroups:
+      attachIDs:
+        - "sg-080f33e18f3d1152d"
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/authorized_keys
+    iam:
+      instanceProfileARN: "arn:aws:iam::707566951618:instance-profile/jhedman-ec2-role"
+      instanceRoleARN: "arn:aws:iam::707566951618:role/jhedman-ec2-role"
