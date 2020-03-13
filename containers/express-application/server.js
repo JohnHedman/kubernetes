@@ -12,7 +12,7 @@ const app = express();
 
 /**
  * This function is meant to use large amounts of cpu and
- * memory to show how kubernetes scales (didn't work out well)
+ * memory to show how kubernetes scales
  * @param {number} num The index to find Fibonacci for
  * @return {number} The value of the Fibonacci index
  */
@@ -45,36 +45,12 @@ function getPrimeIndex(num) {
     return -1;
   }
 
-  // const primeNumbers = [];
-  // const nonDivArray = [];
-  // for (let x = 0; x < num; x++) {// x is the index that we are trying to find
-  //   const primeNumber2 = [];
-  //   for (let y = 2; y < Infinity; y++) {// y is number we are checking to see if prime
-  //     let isPrime = true;
-  //     const notDiv = [];
-  //     for (let z = 2; z < y; z++) {// z is number we are seeing if y is divisible by
-  //       if (y % z == 0) {
-  //         isPrime = false;
-  //       }
-  //       else {
-  //         notDiv.push(z);
-  //       }
-  //     }
-  //     if (isPrime) {
-  //       const index = primeNumber2.push(y);
-  //       if ((index - 1) === x) {
-  //         primeNumbers.push(y);
-  //         nonDivArray.push(notDiv);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // This is meant to increase the memory usage from the program
-  const memoryWaist = [];
-  for (let m = 0; m < 100000000; m++) {
-    memoryWaist.push(m);
+  // This is meant to increase (waste) the memory usage from the program
+  const memoryWaste = [];
+  if (num >= 10000) {
+    for (let m = 0; m < 100000000; m++) {
+      memoryWaste.push(m);
+    }
   }
 
   const primeNumbers = [];
@@ -98,7 +74,7 @@ function getPrimeIndex(num) {
 
   // Not sure if garbage collection is smart enough to free the
   // array memory so I added this to make sure it doesn't
-  memoryWaist.push(1);
+  memoryWaste.push(1);
   return primeNumbers[num - 1];
 }
 

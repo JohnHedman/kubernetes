@@ -1,7 +1,13 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: johnhedman
+
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: johnhedman-express-app
+  name: express-app
 spec:
   replicas: 2
   template:
@@ -11,7 +17,7 @@ spec:
     spec:
       containers:
         - name: express-app
-          image: "johnhedman/express-app:prime"
+          image: "johnhedman/express-app:p2"
           ports:
             - name: web
               containerPort: 8080
@@ -19,7 +25,7 @@ spec:
           resources:
               limits:
                 memory: "2G"
-                cpu: "1G"
+                cpu: "1000m"
               requests:
-                memory: "2G"
-                cpu: "1G"
+                memory: "1G"
+                cpu: "500m"
