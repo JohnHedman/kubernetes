@@ -1,0 +1,52 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: jhedman-config-eksctl
+  region: us-west-2
+
+# vpc:
+#   subnets:
+#     private:
+#       us-west-2a: { id: subnet-028494fe57ede80d3 }
+#       us-west-2b: { id: subnet-0276f0ec725968655 }
+#       us-west-2c: { id: subnet-0f49a26c0b3354f7b }
+#   securityGroup: "sg-0c03411158eb72748"
+#   sharedNodeSecurityGroup: "sg-0c03411158eb72748"
+
+nodeGroups:
+  - name: ng-1-workers
+    labels: 
+      role: workers
+    instanceType: m5.large
+    desiredCapacity: 3
+    privateNetworking: true
+    volumeSize: 32
+    securityGroups:
+      attachIDs:
+        - "sg-080f33e18f3d1152d"
+        - "sg-0a55c9774c85d44ce"
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/authorized_keys
+    iam:
+      instanceProfileARN: "arn:aws:iam::574826924367:instance-profile/lsds-developer-ec2"
+      instanceRoleARN: "arn:aws:iam::574826924367:role/lsds-developer-ec2"
+
+  - name: ng-2-builders
+    labels:
+      role: builders
+    instanceType: m5.large
+    desiredCapacity: 2
+    privateNetworking: true
+    volumeSize: 32
+    securityGroups:
+      attachIDs:
+        - "sg-080f33e18f3d1152d"
+        - "sg-0a55c9774c85d44ce"
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/authorized_keys
+    iam:
+      instanceProfileARN: "arn:aws:iam::574826924367:instance-profile/lsds-developer-ec2"
+      instanceRoleARN: "arn:aws:iam::574826924367:role/lsds-developer-ec2"

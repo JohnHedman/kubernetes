@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: johnhedman-express-app
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: express-app
+    spec:
+      containers:
+        - name: express-app
+          image: "johnhedman/express-app:prime"
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          resources:
+              limits:
+                memory: "2G"
+                cpu: "1G"
+              requests:
+                memory: "2G"
+                cpu: "1G"
