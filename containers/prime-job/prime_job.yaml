@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: prime-
+spec:
+  template:
+    spec:
+      containers:
+        - name: prime-job
+          image: "johnhedman/prime-job:latest"
+          command: ["node", "job.js", "100000"]
+          resources:
+              limits:
+                memory: "2G"
+                cpu: "1500m"
+              requests:
+                memory: "1G"
+                cpu: "1000m"
+      restartPolicy: OnFailure
+  backoffLimit: 5

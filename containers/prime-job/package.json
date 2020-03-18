@@ -1,0 +1,17 @@
+{
+    "name": "prime_docker_job",
+    "version": "1.0.0",
+    "description": "Kubernetes Job in Docker",
+    "author": "John Hedman <jhedman@contractor.usgs.gov>",
+    "main": "job.js",
+    "scripts": {
+      "start": "node job.js"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+      "eslint": "^6.8.0",
+      "eslint-config-google": "^0.14.0"
+    }
+  }
+  

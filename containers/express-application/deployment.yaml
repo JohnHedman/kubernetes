@@ -3,7 +3,6 @@
 # metadata:
 #   name: johnhedman
 
----
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -25,7 +24,7 @@ spec:
           resources:
               limits:
                 memory: "2G"
-                cpu: "1000m"
+                cpu: "1500m"
               requests:
                 memory: "1G"
-                cpu: "500m"
+                cpu: "1000m"
