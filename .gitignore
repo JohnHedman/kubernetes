@@ -3,3 +3,6 @@
 
 # vs code settings
 **/.vscode/*
+
+# For now, ignore oui api
+containers/oui-api/**/*

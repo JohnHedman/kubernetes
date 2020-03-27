@@ -16,15 +16,15 @@ spec:
     spec:
       containers:
         - name: express-app
-          image: "johnhedman/express-app:p2"
+          image: "johnhedman/express-app:p3"
           ports:
             - name: web
               containerPort: 8080
               protocol: TCP
           resources:
               limits:
-                memory: "2G"
-                cpu: "1500m"
+                memory: "8G"
+                cpu: "2000m"
               requests:
                 memory: "1G"
                 cpu: "1000m"

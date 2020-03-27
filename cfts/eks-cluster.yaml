@@ -1,0 +1,141 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: "CloudFormation Stack for standing up eks cluster and ec2s connected to autoscaling group as nodes for the cluster"
+
+Parameters:
+  ProjectTag:
+    Type: String
+    Description: "The project tag for stack resources"
+    Default: LSIS
+    AllowedValues:
+      - LPIP
+      - LSAA
+      - LSIS
+  EnvironmentName:
+    Description: "Environment deploying to (dev/it/st/prod)"
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - it
+      - st
+      - prod
+  # Ec2IamInstanceProfile:
+  #   Type: String
+  #   Description: "The type of instance to use for auto scaling group"
+  #   Default: lsds-developer-ec2
+
+# TODO: Set the values for it, st, prod
+Mappings:
+  EnvSettings:
+    dev:
+      ##### Launch Template Configs #####
+      instanceType:
+        - m5.xlarge
+      Subnets:
+        - subnet-028494fe57ede80d3
+        - subnet-0276f0ec725968655
+        - subnet-0f49a26c0b3354f7b
+      SecurityGroups:
+        - sg-080f33e18f3d1152d
+        - sg-06873ff027e4ae94f
+
+      ##### Listener Group Configs #####
+      groupVpcId: vpc-0055752230db6161d
+
+      ##### Auto Scaling Group Configs #####
+      minSize: 2
+      maxSize: 2
+
+    it:
+      ##### Launch Template Configs #####
+      instanceType:
+        - m5.xlarge
+      Subnets:
+        - subnet-028494fe57ede80d3
+        - subnet-0276f0ec725968655
+        - subnet-0f49a26c0b3354f7b
+      SecurityGroups:
+        - sg-080f33e18f3d1152d
+        - sg-06873ff027e4ae94f
+
+      ##### Listener Group Configs #####
+      groupVpcId: vpc-0055752230db6161d
+
+      ##### Auto Scaling Group Configs #####
+      minSize: 2
+      maxSize: 2
+
+    st:
+      ##### Launch Template Configs #####
+      instanceType:
+        - m5.xlarge
+      Subnets:
+        - subnet-00dcaa5dc7309fb90
+        - subnet-0363bbf65d04094eb
+        - subnet-0e78a825ea51c3718
+      SecurityGroups:
+        - sg-0bb82fa8f92dd2285
+        - sg-00e6440b8f8f480e6
+
+      ##### Listener Group Configs #####
+      groupVpcId: vpc-0055752230db6161d
+
+      ##### Auto Scaling Group Configs #####
+      minSize: 2
+      maxSize: 2
+    prod:
+      ##### Launch Template Configs #####
+      instanceType:
+        - m5.xlarge
+      Subnets:
+        - subnet-00dcaa5dc7309fb90
+        - subnet-0363bbf65d04094eb
+        - subnet-0e78a825ea51c3718
+      SecurityGroups:
+        - sg-0bb82fa8f92dd2285
+        - sg-00e6440b8f8f480e6
+
+      ##### Listener Group Configs #####
+      groupVpcId: vpc-0055752230db6161d
+
+      ##### Auto Scaling Group Configs #####
+      minSize: 2
+      maxSize: 2
+
+Resources:
+  # EKS Cluster CFT Documentation: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html
+  eksCluster:
+    Type: 'AWS::EKS::Cluster'
+    Properties:
+      Name: lsis-eks-cluster
+      Version: '1.15'
+      RoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/jhedman-eks-cluster-role
+      ResourcesVpcConfig:
+        SecurityGroupIds: !FindInMap [EnvSettings, !Ref EnvironmentName, SecurityGroups]
+        SubnetIds: !FindInMap [EnvSettings, !Ref EnvironmentName, Subnets]
+
+  # EKS Managed Node Group Documentation: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html
+  eksNodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      AmiType: "AL2_x86_64"
+      ClusterName: !Ref eksCluster
+      DiskSize: 32
+      ForceUpdateEnabled: false
+      InstanceTypes: !FindInMap [EnvSettings, !Ref EnvironmentName, instanceType]
+      Labels:
+        Environment: development
+      NodegroupName: lsis-eks-managed-node-group
+      NodeRole: !Sub arn:aws:iam::${AWS::AccountId}:role/jhedman-eks-node-role
+      RemoteAccess:
+        Ec2SshKey: jhedman-sgt-keypair
+        SourceSecurityGroups: !FindInMap [EnvSettings, !Ref EnvironmentName, SecurityGroups]
+      ScalingConfig:
+        DesiredSize: 1
+        MinSize: 1
+        MaxSize: 10
+      Subnets: !FindInMap [EnvSettings, !Ref EnvironmentName, Subnets]
+      Tags:
+        Name: lsis-eks-managed-node
+        Project: LSIS

@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
   res.send('Hello World\n');
 });
 
-
 app.get('/test', (req, res) => {
   res.send('Hello this is a test!\n');
 });
@@ -30,6 +29,7 @@ app.get('/fib/:num', (req, res) => {
   const fibNum = jhedmanMath.getFibIndex(index);
   console.timeEnd('Fib');
 
+  console.log('Fib found for index ' + index.toString() + ':', fibNum);
   // Send response back
   res.send(fibNum.toString() + '\n');
 });
@@ -42,6 +42,7 @@ app.get('/prime/:num', (req, res) => {
   const primeNum = jhedmanMath.getPrimeIndex(index);
   console.timeEnd('Prime');
 
+  console.log('Prime found for index ' + index.toString() + ':', primeNum);
   // Send response back
   res.send(primeNum.toString() + '\n');
 });
